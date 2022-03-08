@@ -28,5 +28,7 @@ app.use(express.json())
 routes(app)
 
 app.listen(process.env.PORT || 3000, () => {
-    console.log(`Server is running http://localhost:${process.env.PORT || 3000}`);
+    console.log(`Server is running http://localhost:${process.env.PORT || 3000}`,
+    this.address().port, app.settings.env
+    );
 })
