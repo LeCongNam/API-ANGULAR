@@ -2,7 +2,7 @@
   "name": "api",
   "version": "1.0.0",
   "description": "send json",
-  "main": "./src/index.js",
+  "main": "index.js",
   "scripts": {
     "start": "node  ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,9 +15,7 @@
     "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.4",
-    "morgan": "^1.10.0"
-  },
-  "devDependencies": {
+    "morgan": "^1.10.0",
     "dotenv": "^16.0.0",
     "nodemon": "^2.0.15"
   }
