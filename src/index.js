@@ -7,10 +7,12 @@ const db = require('./model/config/connect')
 require('dotenv').config()
 
 
-
-
 // Logger 
 app.use(morgan('dev'))
+
+
+// Connect DB
+db.Connect()
 
 // Fix cors allow /*/
 app.use(cors())
@@ -21,8 +23,6 @@ app.use(express.urlencoded({
 app.use(express.json())
 
 
-// Connect DB
-db.Connect()
 
 // Initial Router
 routes(app)
