@@ -7,7 +7,9 @@ router.get('/home',projectControler.home)
 
 router.post('/create', projectControler.create)
 
-router.post('/login', projectControler.register )
+router.post('/login', projectControler.login )
+
+router.post('/register', projectControler.register )
 
 router.patch('/update',projectControler.update)
 
