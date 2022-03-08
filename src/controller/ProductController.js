@@ -47,31 +47,29 @@ class ProductController {
 
         User.find({
             user_name: user_name,
-        },(err, user)=>{
-            if(user){
+        }, (err, user) => {
+            if (user) {
                 let token = jwt.sign(
-                    {user_name,password,email},
+                    { user_name, password, email },
                     privateKey,
                     { expiresIn: 20000 }
                 )
-                
-                    let userInfo = user[0]
+
+                let userInfo = user[0]
 
                 res.status(200).json({
                     message: "OK",
-                        userInfo,
-                        token
-                    
+                    userInfo,
+                    token
                 })
             }
             if (err) {
-                res.status(401).json({message:"Login Failse!!"})
+                res.status(401).json({ message: "Login Failse!!" })
             }
         })
-      
+
 
     }
-
 
     // [POST]: /register
     register(req, res) {
@@ -88,7 +86,6 @@ class ProductController {
                 err
             }))
     }
-
     // [PATH]: /update
     async update(req, res) {
         let { project_name_old, ...data } = req.body
