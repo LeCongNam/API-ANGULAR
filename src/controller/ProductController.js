@@ -23,12 +23,12 @@ class ProductController {
     create(req, res) {
         // data:  product_name, price, product_properties, description
         let data = req.body
-        let newProject = new Product(data)
-        newProject.save()
+        let newProduct = new Product(data)
+        newProduct.save()
             .then(() => {
                 res.json({
                     status: 200,
-                    message: 'Add project ok',
+                    message: 'Add product ok',
                     data: data
                 })
             })
@@ -42,7 +42,7 @@ class ProductController {
 
     // [POST]: /login
     login(req, res) {
-        let privateKey = process.env.PRIVATEKEY
+        let privateKey = process.env.PRIVATEKEY || 'Abc123'
         let { user_name, password, email } = req.body
 
         User.find({
@@ -61,6 +61,7 @@ class ProductController {
                     message: "OK",
                     userInfo,
                     token
+
                 })
             }
             if (err) {
@@ -70,6 +71,7 @@ class ProductController {
 
 
     }
+
 
     // [POST]: /register
     register(req, res) {
@@ -86,41 +88,59 @@ class ProductController {
                 err
             }))
     }
+
     // [PATH]: /update
     async update(req, res) {
-        let { project_name_old, ...data } = req.body
+        let { product_name_old, ...data } = req.body
 
-        await Project.find({ project_name: project_name_old }).exec()
-            .then(dataRes => {
-                let newDataProject = Object.assign(dataRes[0], data)
-                console.log(newDataProject);
-                Project.findOneAndUpdate({ project_name: project_name_old }, newDataProject)
-                    .exec()
-                    .then(() => {
-                        res.status(200).json({
-                            status: 200
-                        })
-                    })
-                    .catch(err => res.status(409).json({
-                        message: "Update Failse"
-                    }))
-            })
+        if (product_name_old) {
+            await Product.find({ product_name: product_name_old }).exec()
+                .then(dataRes => {
+                    console.log("dataRes", dataRes[0]);
+                    if (Number(dataRes) !== 0) {
+                        let newDataProduct = Object.assign(dataRes[0], data)
+                        console.log(newDataProduct);
+                        Product.findOneAndUpdate({ product_name: product_name_old }, newDataProduct)
+                            .exec()
+                            .then(() => {
+                                res.status(200).json({
+                                    status: 200
+                                })
+                            })
+                            .catch(err => res.status(409).json({
+                                message: "Update Failse"
+                            }))
+                    }
+                    return res.send({ err: "Product not found" })
+                })
 
+                return
+        }
+
+        return res.status(401).json({ message: "Please send [old project name]?" })
     }
+
 
     // [DELETE]: /delete
     delete(req, res) {
-        let projectName = req.body.project_name
-        console.log(projectName)
+        let productName = req.body.product_name
 
-        Project.findOneAndDelete({ "project_name": projectName })
-            .then(resp => res.json({
-                message: "Delete Success"
-            }))
-            .catch(err => res.status(409).json({
-                message: "Delete Failse!!",
-                err
-            }))
+        Product.findOneAndDelete({ "product_name": productName }, { sort: 'ASC' }, (err, data) => {
+            if (data) {
+                res.json({
+                    message: "Delete Success"
+                })
+            }
+
+            if (err) {
+                res.status(409).json({
+                    message: "Delete Failse!!",
+                    err
+                })
+            }
+        })
+
+        return res.status(404).json({ message: "Product not Found" })
     }
 
 }

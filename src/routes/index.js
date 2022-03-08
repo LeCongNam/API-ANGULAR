@@ -17,6 +17,10 @@ function routes(app) {
                 'error-message': err
             })
     })
+
+    app.use('/',(req,res)=>{
+        res.send('Hello my app')
+    })
 }
 
 module.exports = routes;

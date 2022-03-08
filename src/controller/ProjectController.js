@@ -43,7 +43,7 @@ class ProjectController {
 
     // [POST]: /login
     login(req, res) {
-        let privateKey = process.env.PRIVATEKEY|| 'Abc123'
+        let privateKey = process.env.PRIVATEKEY || 'Abc123'
         let { user_name, password, email } = req.body
 
         User.find({
@@ -94,22 +94,28 @@ class ProjectController {
     async update(req, res) {
         let { project_name_old, ...data } = req.body
 
-        await Project.find({ project_name: project_name_old }).exec()
-            .then(dataRes => {
-                let newDataProject = Object.assign(dataRes[0], data)
-                console.log(newDataProject);
-                Project.findOneAndUpdate({ project_name: project_name_old }, newDataProject)
-                    .exec()
-                    .then(() => {
-                        res.status(200).json({
-                            status: 200
-                        })
-                    })
-                    .catch(err => res.status(409).json({
-                        message: "Update Failse"
-                    }))
-            })
+        if (project_name_old) {
+            await Project.find({ project_name: project_name_old }).exec()
+                .then(dataRes => {
+                    if (Number(dataRes) !== 0) {
+                        let newDataProject = Object.assign(dataRes[0], data)
+                        console.log(newDataProject);
+                        Project.findOneAndUpdate({ project_name: project_name_old }, newDataProject)
+                            .exec()
+                            .then(() => {
+                                res.status(200).json({
+                                    status: 200
+                                })
+                            })
+                            .catch(err => res.status(409).json({
+                                message: "Update Failse"
+                            }))
+                    }
+                    return res.send({ err: "Project not found" })
+                })
+        }
 
+        return res.status(401).json({ message: "Please send [old project name]?" })
     }
 
     // [DELETE]: /delete
@@ -117,14 +123,22 @@ class ProjectController {
         let projectName = req.body.project_name
         console.log(projectName)
 
-        Project.findOneAndDelete({ "project_name": projectName })
-            .then(resp => res.json({
-                message: "Delete Success"
-            }))
-            .catch(err => res.status(409).json({
-                message: "Delete Failse!!",
-                err
-            }))
+        Project.findOneAndDelete({ "project_name": projectName }, { sort: 'ASC' }, (err, data) => {
+            if (data) {
+                res.json({
+                    message: "Delete Success"
+                })
+            }
+
+            if (err) {
+                res.status(409).json({
+                    message: "Delete Failse!!",
+                    err
+                })
+            }
+        })
+        return res.status(404).json({ message: "Project not Found" })
+
     }
 
 }
