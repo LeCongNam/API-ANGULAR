@@ -91,7 +91,7 @@ class ProjectController {
     }
 
     // [PATH]: /update
-    async update(req, res) {
+    async    update(req, res) {
         let { project_name_old, ...data } = req.body
 
         if (project_name_old) {
@@ -113,6 +113,7 @@ class ProjectController {
                     }
                     return res.send({ err: "Project not found" })
                 })
+                return
         }
 
         return res.status(401).json({ message: "Please send [old project name]?" })
@@ -121,13 +122,13 @@ class ProjectController {
     // [DELETE]: /delete
     delete(req, res) {
         let projectName = req.body.project_name
-        console.log(projectName)
 
         Project.findOneAndDelete({ "project_name": projectName }, { sort: 'ASC' }, (err, data) => {
-            if (data) {
+            if (Number(data) != 0) {
                 res.json({
                     message: "Delete Success"
                 })
+                return
             }
 
             if (err) {
@@ -135,9 +136,14 @@ class ProjectController {
                     message: "Delete Failse!!",
                     err
                 })
+
+                return
             }
+
+            res.status(404).json({ message: "Project not Found" })
         })
-        return res.status(404).json({ message: "Project not Found" })
+       
+        
 
     }
 

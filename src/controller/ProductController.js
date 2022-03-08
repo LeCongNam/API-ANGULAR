@@ -126,10 +126,11 @@ class ProductController {
         let productName = req.body.product_name
 
         Product.findOneAndDelete({ "product_name": productName }, { sort: 'ASC' }, (err, data) => {
-            if (data) {
+            if (Number(data)) {
                 res.json({
                     message: "Delete Success"
                 })
+                return
             }
 
             if (err) {
@@ -137,10 +138,11 @@ class ProductController {
                     message: "Delete Failse!!",
                     err
                 })
+                return
             }
+             res.status(404).json({ message: "Product not Found" })
         })
 
-        return res.status(404).json({ message: "Product not Found" })
     }
 
 }
