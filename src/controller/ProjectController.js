@@ -23,7 +23,7 @@ class ProjectController {
     create(req, res) {
         // data:  project_name, day_start, day_complete, author, progreess
         let data = req.body
-        
+
         let newProject = new Project(data)
         newProject.save()
             .then(() => {
@@ -48,28 +48,28 @@ class ProjectController {
 
         User.find({
             user_name: user_name,
-        },(err, user)=>{
-            if(user){
+        }, (err, user) => {
+            if (user) {
                 let token = jwt.sign(
-                    {user_name,password,email},
+                    { user_name, password, email },
                     privateKey,
                     { expiresIn: 20000 }
                 )
-                
-                    let userInfo = user[0]
+
+                let userInfo = user[0]
 
                 res.status(200).json({
                     message: "OK",
-                        userInfo,
-                        token
-                    
+                    userInfo,
+                    token
+
                 })
             }
             if (err) {
-                res.status(401).json({message:"Login Failse!!"})
+                res.status(401).json({ message: "Login Failse!!" })
             }
         })
-      
+
 
     }
 
@@ -121,8 +121,8 @@ class ProjectController {
             .then(resp => res.json({
                 message: "Delete Success"
             }))
-            .catch(err => res.status(409).json({ 
-                message: "Delete Failse!!" ,
+            .catch(err => res.status(409).json({
+                message: "Delete Failse!!",
                 err
             }))
     }
