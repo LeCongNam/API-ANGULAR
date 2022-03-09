@@ -126,14 +126,14 @@ class ProjectController {
         Project.findOneAndDelete({ "project_name": projectName }, 
             { sort: 'ASC' },
             (err, data) => {
-            if (Number(data) != 0) {
+            if (data?._id) {
                 res.json({
                     message: "Delete Success"
                 })
                 return
             }
 
-            if (err) {
+            if (err || data == null || data ==[]) {
                 res.status(409).json({
                     message: "Delete Failse!!",
                     err
@@ -142,7 +142,7 @@ class ProjectController {
                 return
             }
 
-            res.status(404).json({ message: "Project not Found" })
+            
         })
        
         
