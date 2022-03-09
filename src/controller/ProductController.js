@@ -125,7 +125,9 @@ class ProductController {
     delete(req, res) {
         let productName = req.body.product_name
 
-        Product.findOneAndDelete({ "product_name": productName }, { sort: 'ASC' }, (err, data) => {
+        Product.findOneAndDelete({ product_name: productName }, 
+            { sort: 'ASC' }, 
+            (err, data) => {
             if (Number(data)) {
                 res.json({
                     message: "Delete Success"

@@ -123,7 +123,9 @@ class ProjectController {
     delete(req, res) {
         let projectName = req.body.project_name
 
-        Project.findOneAndDelete({ "project_name": projectName }, { sort: 'ASC' }, (err, data) => {
+        Project.findOneAndDelete({ "project_name": projectName }, 
+            { sort: 'ASC' },
+            (err, data) => {
             if (Number(data) != 0) {
                 res.json({
                     message: "Delete Success"
