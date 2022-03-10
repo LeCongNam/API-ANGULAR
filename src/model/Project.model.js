@@ -6,7 +6,7 @@ const project = new Schema({
     day_start:{type:Date, require },
     day_complete:{type:Date, require },
     author:{type:String, require },
-    progreess:{type: Number, require},
+    progress:{type: Number, require},
     state:{ type: String}
 },{ timestamps:true } );
  
