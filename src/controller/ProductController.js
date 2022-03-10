@@ -123,9 +123,9 @@ class ProductController {
 
     // [DELETE]: /delete
     delete(req, res) {
-        let productName = req.body.product_name
+        let productId = req.params.id
         
-        Product.findOneAndDelete({ product_name: productName }, 
+        Product.findOneAndDelete({ _id: productId }, 
             { sort: 'ASC' }, 
             (err, data) => {
                 console.log(data);
@@ -135,7 +135,6 @@ class ProductController {
             if (err || data == null || data ==[]) {
                 res.status(409).json({
                     message: "Delete Failse!!",
-                    err
                 })
                 return
             }

@@ -121,9 +121,8 @@ class ProjectController {
 
     // [DELETE]: /delete
     delete(req, res) {
-        let projectName = req.body.project_name
-
-        Project.findOneAndDelete({ "project_name": projectName }, 
+        let projectId = req.params.id
+        Project.findOneAndDelete({ _id: projectId }, 
             { sort: 'ASC' },
             (err, data) => {
             if (data?._id) {
@@ -136,13 +135,11 @@ class ProjectController {
             if (err || data == null || data ==[]) {
                 res.status(409).json({
                     message: "Delete Failse!!",
-                    err
+                    // err
                 })
 
                 return
             }
-
-            
         })
        
         

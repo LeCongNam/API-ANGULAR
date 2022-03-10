@@ -13,7 +13,7 @@ router.post('/register', projectControler.register )
 
 router.patch('/update',projectControler.update)
 
-router.delete('/delete',projectControler.delete)
+router.delete('/delete/:id',projectControler.delete)
 
 
 router.get('/', projectControler.home )
