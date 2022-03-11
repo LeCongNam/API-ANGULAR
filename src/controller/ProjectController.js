@@ -91,16 +91,15 @@ class ProjectController {
     }
 
     // [PATH]: /update
-    async    update(req, res) {
-        let { project_name_old, ...data } = req.body
+    async update(req, res) {
+        let {...data }  = req.body
+        let id = req.params.id
 
-        if (project_name_old) {
-            await Project.find({ project_name: project_name_old }).exec()
+        if (data?.project_name) {
+            await Project.find({ _id: id}).exec()
                 .then(dataRes => {
                     if (Number(dataRes) !== 0) {
-                        let newDataProject = Object.assign(dataRes[0], data)
-                        console.log(newDataProject);
-                        Project.findOneAndUpdate({ project_name: project_name_old }, newDataProject)
+                        Project.findOneAndUpdate({ _id: id }, data)
                             .exec()
                             .then(() => {
                                 res.status(200).json({
@@ -111,8 +110,9 @@ class ProjectController {
                                 message: "Update Failse"
                             }))
                     }
-                    return res.send({ err: "Project not found" })
+                    // return res.send({ err: "Project not found" })
                 })
+                .catch(err=>res.status(404).json({ err: "Project not found" }))
                 return
         }
 

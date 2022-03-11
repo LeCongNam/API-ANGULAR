@@ -11,7 +11,7 @@ router.post('/login', projectControler.login )
 
 router.post('/register', projectControler.register )
 
-router.patch('/update',projectControler.update)
+router.patch('/update/:id',projectControler.update)
 
 router.delete('/delete/:id',projectControler.delete)
 
