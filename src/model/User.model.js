@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt')
 const User = new Schema({
     user_name:  { type: String, required: true, index: { unique: true } },
     password: { type: String, required: true },
-    email: { type: String, required: true }
 })
 
 User.index({ user_name: 1}, { unique: true })
