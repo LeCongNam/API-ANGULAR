@@ -51,7 +51,7 @@ class ProjectController {
         }, (err, user) => {
             if (user) {
                 let token = jwt.sign(
-                    { user_name, password, email },
+                    { user_name, password },
                     privateKey,
                     { expiresIn: 20000 }
                 )

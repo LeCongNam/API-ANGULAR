@@ -43,14 +43,14 @@ class ProductController {
     // [POST]: /login
     login(req, res) {
         let privateKey = process.env.PRIVATEKEY || 'Abc123'
-        let { user_name, password, email } = req.body
+        let { user_name, password} = req.body
 
         User.find({
             user_name: user_name,
         }, (err, user) => {
             if (user) {
                 let token = jwt.sign(
-                    { user_name, password, email },
+                    { user_name, password},
                     privateKey,
                     { expiresIn: 20000 }
                 )
