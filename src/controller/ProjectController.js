@@ -44,7 +44,7 @@ class ProjectController {
     // [POST]: /login
     login(req, res) {
         let privateKey = process.env.PRIVATEKEY || 'Abc123'
-        let { user_name, password, email } = req.body
+        let { user_name, password } = req.body
 
         User.find({
             user_name: user_name,
