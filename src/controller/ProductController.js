@@ -75,7 +75,7 @@ class ProductController {
                         res.status(401).json({ message: "Password or user name do not Exists" });
                     }
                 } catch (error) {
-                    res.json({ error });
+                    res.status(401).json({ error });
                 }
 
             }
@@ -99,7 +99,7 @@ class ProductController {
                     message: "Register Success"
                 })
             })
-            .catch(err => res.json({
+            .catch(err => res.status(401).json({
                 message: "Register do not complete!! Please check data Register",
                 err
             }))
