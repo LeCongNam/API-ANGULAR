@@ -40,29 +40,44 @@ class ProductController {
     }
 
 
-    // [POST]: /login
-    login(req, res) {
+     // [POST]: /login
+     login(req, res) {
         let privateKey = process.env.PRIVATEKEY || 'Abc123'
-        let { user_name, password} = req.body
+        let { user_name, password } = req.body
 
         User.find({
             user_name: user_name,
         }, (err, user) => {
             if (user) {
-                let token = jwt.sign(
-                    { user_name, password},
-                    privateKey,
-                    { expiresIn: 20000 }
-                )
 
-                let userInfo = user[0]
+                try {
+                    var salt = bcrypt.genSaltSync(10)
+                    var hash = bcrypt.hashSync('Abc123', salt)
+                    
+                    var compareData = bcrypt.compareSync(password,user[0].password)
+                   
+                    if (compareData) {
+                        var token = jwt.sign(
+                            { user_name, password },
+                            privateKey,
+                            { expiresIn: 20000 }
+                        )
+                        let userInfo = user[0]
+                        res.status(200).json({
+                            message: "OK",
+                            'data': {
+                                'user': userInfo,
+                                token
+                            }
 
-                res.status(200).json({
-                    message: "OK",
-                    userInfo,
-                    token
+                        })
+                    } else {
+                        res.status(401).json({ message: "Password or user name do not Exists" });
+                    }
+                } catch (error) {
+                    res.json({ error });
+                }
 
-                })
             }
             if (err) {
                 res.status(401).json({ message: "Login Failse!!" })
@@ -71,6 +86,7 @@ class ProductController {
 
 
     }
+
 
 
     // [POST]: /register

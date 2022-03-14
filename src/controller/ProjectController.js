@@ -2,6 +2,8 @@ const Project = require('../model/Project.model')
 var jwt = require('jsonwebtoken');
 const { response } = require('express');
 const User = require('../model/User.model')
+const bcrypt = require('bcrypt');
+const { compare } = require('bcrypt');
 
 class ProjectController {
     // [GET]: /home
@@ -50,20 +52,35 @@ class ProjectController {
             user_name: user_name,
         }, (err, user) => {
             if (user) {
-                let token = jwt.sign(
-                    { user_name, password },
-                    privateKey,
-                    { expiresIn: 20000 }
-                )
 
-                let userInfo = user[0]
+                try {
+                    var salt = bcrypt.genSaltSync(10)
+                    var hash = bcrypt.hashSync('Abc123', salt)
+                    
+                    var compareData = bcrypt.compareSync(password,user[0].password)
+                   
+                    if (compareData) {
+                        var token = jwt.sign(
+                            { user_name, password },
+                            privateKey,
+                            { expiresIn: 20000 }
+                        )
+                        let userInfo = user[0]
+                        res.status(200).json({
+                            message: "OK",
+                            'data': {
+                                'user': userInfo,
+                                token
+                            }
 
-                res.status(200).json({
-                    message: "OK",
-                    userInfo,
-                    token
+                        })
+                    } else {
+                        res.json({ message: "Password or user name do not Exists" });
+                    }
+                } catch (error) {
+                    res.json({ error });
+                }
 
-                })
             }
             if (err) {
                 res.status(401).json({ message: "Login Failse!!" })
@@ -92,11 +109,11 @@ class ProjectController {
 
     // [PATH]: /update
     async update(req, res) {
-        let {...data }  = req.body
+        let { ...data } = req.body
         let id = req.params.id
 
         if (data?.project_name) {
-            await Project.find({ _id: id}).exec()
+            await Project.find({ _id: id }).exec()
                 .then(dataRes => {
                     if (Number(dataRes) !== 0) {
                         Project.findOneAndUpdate({ _id: id }, data)
@@ -112,8 +129,8 @@ class ProjectController {
                     }
                     // return res.send({ err: "Project not found" })
                 })
-                .catch(err=>res.status(404).json({ err: "Project not found" }))
-                return
+                .catch(err => res.status(404).json({ err: "Project not found" }))
+            return
         }
 
         return res.status(401).json({ message: "Please send [old project name]?" })
@@ -122,27 +139,27 @@ class ProjectController {
     // [DELETE]: /delete
     delete(req, res) {
         let projectId = req.params.id
-        Project.findOneAndDelete({ _id: projectId }, 
+        Project.findOneAndDelete({ _id: projectId },
             { sort: 'ASC' },
             (err, data) => {
-            if (data?._id) {
-                res.json({
-                    message: "Delete Success"
-                })
-                return
-            }
+                if (data?._id) {
+                    res.json({
+                        message: "Delete Success"
+                    })
+                    return
+                }
 
-            if (err || data == null || data ==[]) {
-                res.status(409).json({
-                    message: "Delete Failse!!",
-                    // err
-                })
+                if (err || data == null || data == []) {
+                    res.status(409).json({
+                        message: "Delete Failse!!",
+                        // err
+                    })
 
-                return
-            }
-        })
-       
-        
+                    return
+                }
+            })
+
+
 
     }
 
