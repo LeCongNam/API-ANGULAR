@@ -133,7 +133,7 @@ class ProjectController {
             return
         }
 
-        return res.status(401).json({ message: "Please send [old project name]?" })
+        return res.status(401).json({ message: "Please send ID " })
     }
 
     // [DELETE]: /delete

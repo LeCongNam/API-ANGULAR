@@ -11,7 +11,7 @@ router.post('/login', productController.login )
 
 router.post('/register', productController.register )
 
-router.patch('/update',productController.update)
+router.patch('/update/:id',productController.update)
 
 router.delete('/delete',productController.delete)
 

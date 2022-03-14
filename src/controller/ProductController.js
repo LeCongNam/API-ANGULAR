@@ -108,9 +108,10 @@ class ProductController {
     // [PATH]: /update
     async update(req, res) {
         let { product_name_old, ...data } = req.body
+        let id = req.params.id
 
         if (product_name_old) {
-            await Product.find({ product_name: product_name_old }).exec()
+            await Product.find({ _id: id }).exec()
                 .then(dataRes => {
                     console.log("dataRes", dataRes[0]);
                     if (Number(dataRes) !== 0) {
