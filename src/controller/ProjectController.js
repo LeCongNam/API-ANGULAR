@@ -55,7 +55,8 @@ class ProjectController {
 
                 try {
                     var salt = bcrypt.genSaltSync(10)
-                    var hash = bcrypt.hashSync('Abc123', salt)
+                    let privateKey = process.env.privateKey
+                    var hash = bcrypt.hashSync(privateKey, salt)
                     
                     var compareData = bcrypt.compareSync(password,user[0].password)
                    

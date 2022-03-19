@@ -52,7 +52,7 @@ class ProductController {
 
                 try {
                     var salt = bcrypt.genSaltSync(10)
-                    var hash = bcrypt.hashSync('Abc123', salt)
+                    var hash = bcrypt.hashSync(process.env.privateKey, salt)
                     
                     var compareData = bcrypt.compareSync(password,user[0].password)
                    
