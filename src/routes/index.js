@@ -18,6 +18,9 @@ function routes(app) {
             })
     })
 
+    app.use('/', res.status(200).send({
+        message:'Hello world'
+    }))
 
 }
 
